@@ -1,0 +1,59 @@
+Proof-of-concept implementations of BLISS
+=========================================
+
+This is a proof-of-concept implementation of a cryptographic signature as
+described in the following article:
+
+[1] L. Ducas, A. Durmus, T. Lepoint, L. Lyubashevsky, "Lattice Signatures and
+Bimodal Gaussians". Available at http://eprint.iacr.org/2013
+
+This implementation in C++ requires NTL and is strictly a research-oriented
+implementation; therefore it contains numerous debugging hooks or dirty hacks,
+the configurations variables are hard-coded and there is no documentation.
+Consequently, this ugly code should not be considered as a source of shame or
+embarrassment for the authors.
+
+This academic implementation is NOT to be used, not to be considered secured
+nor pretty code. However we publish it under license CeCILL as a way to
+support code-sharing and to allow the community to verify easily both the
+correctness and the efficiency of this signature scheme.
+
+If you are interested by a efficient and secure implementation of BLISS,
+please contact us at bliss@di.ens.fr.
+
+
+HOW TO RUN THE CODE?
+--------------------
+
+Modify the Makefile accordingly and type:
+```
+$ make
+$ ./bliss
+```
+
+The program outputs the secret and verification keys, and several other
+values. Finally, it signs the same message several time and verify it.
+
+The parameters can be modified in Parameters.h. Note that this is where you
+can switch between the instances of BLISS (BLISS-0, BLISS-I, ..., BLISS-IV),
+by modifying
+
+```#define INSTANTIATION```
+
+Notice the following parameters in main.cpp:
+
+```#define VERIFY```
+Set to 0 if you do not want to verify (for benchmarking), and to 1 if you want
+to verify the signatures.
+
+```long nbSign = 10000;```
+Line 189; define the number of signatures you want to execute.
+
+Notice also that the main contains numerous pieces of code to verify parts of
+the implementations (Gaussian Sampling, randomness, verification AS=qI)...
+
+Finally, notice that by commenting the line
+```#define _CDT_SAMPLER```
+in Sampler.cpp, one will use the Sampling algorithm for constrained devices
+instead of the classical cumulative distribution table (which is more
+efficient on a device with enough memory).
