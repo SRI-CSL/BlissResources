@@ -12,7 +12,7 @@
 
 const uint32_t mask12 = ((uint64_t)1 << 12) - 1;
 
-    
+//iam: K-RED(C)  page 7 of PL&MN  (k = 3)
 int32_t reduce12289(int64_t a)
 { // Reduction modulo q
     int32_t c0, c1;
@@ -23,7 +23,7 @@ int32_t reduce12289(int64_t a)
     return (3*c0 - c1);
 }
 
-    
+//iam: K-RED-2x(C)  page 7 of PL&MN (k = 3)  
 int32_t reduce12289_2x(int64_t a)
 { // Two merged reductions modulo q
     int32_t c0, c1, c2;
@@ -35,7 +35,7 @@ int32_t reduce12289_2x(int64_t a)
     return (9*c0 - 3*c1 + c2);
 }
 
-
+//iam:  Algorithm 3 page 9 of  PL&MN (m = 128)  ?
 void NTT_CT_std2rev_12289(int32_t* a, const int32_t* psi_rev, unsigned int N)
 { // Forward NTT
     unsigned int m, i, j, j1, j2, k = N;
@@ -86,7 +86,7 @@ void NTT_CT_std2rev_12289(int32_t* a, const int32_t* psi_rev, unsigned int N)
     return;
 }
 
-
+//iam: Algorithm 4  page 10 of  PL&MN
 void INTT_GS_rev2std_12289(int32_t* a, const int32_t* omegainv_rev, const int32_t omegainv1N_rev, const int32_t Ninv, unsigned int N)
 { // Inverse NTT
     unsigned int m, h, i, j, j1, j2, k = 1;
