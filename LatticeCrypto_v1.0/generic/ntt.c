@@ -35,7 +35,7 @@ int32_t reduce12289_2x(int64_t a)
     return (9*c0 - 3*c1 + c2);
 }
 
-//iam:  Algorithm 3 page 9 of  PL&MN (m = 128)  ?
+//iam:  Algorithm 3 page 9 of  PL&MN  (modifed as described on p 10?)
 void NTT_CT_std2rev_12289(int32_t* a, const int32_t* psi_rev, unsigned int N)
 { // Forward NTT
     unsigned int m, i, j, j1, j2, k = N;

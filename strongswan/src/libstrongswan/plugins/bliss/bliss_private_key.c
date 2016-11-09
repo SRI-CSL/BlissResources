@@ -109,7 +109,12 @@ static void multiply_by_c(int8_t *s, int n, uint16_t *c_indices,
 }
 
 /**
- * BLISS-B GreedySC algorithm
+ * BLISS-B GreedySC algorithm 
+ *
+ * iam: looks to be the algorithm 1 of bliss-b; though not sure why
+ * we are doing two v's. c_indices = the indexes of the non zero
+ * entries in c.
+ *
  */
 static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 					  uint16_t kappa, int32_t *v1, int32_t *v2)
@@ -801,6 +806,10 @@ static uint32_t nks_norm(int8_t *s1, int8_t *s2, int n, uint16_t kappa)
 
 /**
  * Compute the inverse x1 of x modulo q as x^(-1) = x^(q-2) mod q
+ *
+ * iam: note that this does not really depend of the key, just the
+ * params.
+ *
  */
 static uint32_t invert(private_bliss_private_key_t *this, uint32_t x)
 {
