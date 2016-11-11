@@ -115,13 +115,14 @@ static void multiply_by_c(int8_t *s, int n, uint16_t *c_indices,
  * we are doing two v's. c_indices = the indexes of the non zero
  * entries in c.
  *
+ *  BD: this is the bliss-b with m = 2n. S split into (s1, s2)
  */
 static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 					  uint16_t kappa, int32_t *v1, int32_t *v2)
 {
 	int i, j, index;
 	int32_t sign;
-
+ 
 	for (i = 0; i < n; i++)
 	{
 		v1[i] = v2[i] = 0;
@@ -130,7 +131,7 @@ static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 	{
 		index = c_indices[j];
 		sign = 0;
-
+                //\xi_i = sign(<v, si>)
 		for (i = 0; i < index; i++)
 		{
 			sign -= (v1[i] * s1[i - index + n] + v2[i] * s2[i - index + n]);
@@ -139,6 +140,7 @@ static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 		{
 			sign += (v1[i] * s1[i - index] + v2[i] * s2[i - index]);
 		}
+		//v = v - \xi_i . si
 		for (i = 0; i < index; i++)
 		{
 			if (sign > 0)
