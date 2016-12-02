@@ -116,6 +116,9 @@ static void multiply_by_c(int8_t *s, int n, uint16_t *c_indices,
  * entries in c.
  *
  *  BD: this is the bliss-b with m = 2n. S split into (s1, s2)
+ * 
+ * iam: what alows us to assume the entries in s1 and s1 are so small?
+ *
  */
 static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 					  uint16_t kappa, int32_t *v1, int32_t *v2)
