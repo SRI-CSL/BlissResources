@@ -64,7 +64,7 @@ random.o: random.c LatticeCrypto_priv.h
 
 ntt_constants.o: ntt_constants.c LatticeCrypto_priv.h
 	$(CC) $(CFLAGS) ntt_constants.c
-    
+
 ifeq "$(GENERIC)" "TRUE"
     ntt.o: generic/ntt.c LatticeCrypto_priv.h
 	    $(CC) $(CFLAGS) generic/ntt.c 

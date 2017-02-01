@@ -25,8 +25,8 @@
 //             [reg_p2] points to table and 
 //             reg_p3 contains parameter n
 //*********************************************************************** 
-.global NTT_CT_std2rev_12289_asm
-NTT_CT_std2rev_12289_asm:
+.global _NTT_CT_std2rev_12289_asm
+_NTT_CT_std2rev_12289_asm:
   push       r12
   push       r13
   push       r14
@@ -36,8 +36,8 @@ NTT_CT_std2rev_12289_asm:
   mov        rax, reg_p3 
   mov        r12, reg_p3      
   shr        r12, 4           // n/16
-  vmovdqu    ymm14, MASK12x8
-  vmovdqu    ymm12, PERM0246
+  vmovdqu    ymm14, [_MASK12x8+rip]
+  vmovdqu    ymm12, [_PERM0246+rip]
   mov        r14, 16
   mov        rcx, 11
 loop1:
@@ -221,7 +221,7 @@ loop6:
   jl         loop6
 
 // Stage m=256 
-  vmovdqu    ymm9, PERM02134657  
+  vmovdqu    ymm9, [_PERM02134657+rip]
   shl        r9, 1
   xor        rdx, rdx         // i = 0
   xor        r10, r10         // j1 = 0
@@ -315,7 +315,7 @@ loop7:
   jl         loop7
 
 // Stage m=512
-  vmovdqu    ymm9, PERM00224466
+  vmovdqu    ymm9, [_PERM00224466+rip]
   shl        r9, 1            // m = n/2 
   xor        rdx, rdx         // i = 0
   xor        r10, r10         // j1 = 0
@@ -355,8 +355,8 @@ loop8:
 //             reg_p3 and reg_p4 point to constants for scaling and
 //             reg_p5 contains parameter n
 //*********************************************************************** 
-.global INTT_GS_rev2std_12289_asm
-INTT_GS_rev2std_12289_asm:
+.global _INTT_GS_rev2std_12289_asm
+_INTT_GS_rev2std_12289_asm:
   push       r12
   push       r13
   push       r14
@@ -364,8 +364,8 @@ INTT_GS_rev2std_12289_asm:
   push       rbx
 
 // Stage m=1024
-  vmovdqu    ymm9, PERM00224466
-  vmovdqu    ymm14, MASK12x8  
+  vmovdqu    ymm9, [_PERM00224466+rip]
+  vmovdqu    ymm14, [_MASK12x8+rip]
   mov        r12, reg_p5           
   shr        r12, 1          // n/2 = 512
   xor        r15, r15        // i = 0
@@ -395,9 +395,9 @@ loop1b:
   jl         loop1b
   
 // Stage m=512 
-  vmovdqu    ymm9, PERM02134657
-  vmovdqu    ymm13, PERM0145
-  vmovdqu    ymm15, PERM2367   
+  vmovdqu    ymm9, [_PERM02134657+rip]
+  vmovdqu    ymm13, [_PERM0145+rip]
+  vmovdqu    ymm15, [_PERM2367+rip]
   shr        r12, 1          // n/4 = 256
   xor        r15, r15        // i = 0
   xor        r10, r10        // j1 = 0
@@ -483,7 +483,7 @@ loop2b:
   jl         loop2b
      
 // Stage m=256 
-  vmovdqu    ymm12, PERM0246   
+  vmovdqu    ymm12, [_PERM0246+rip]
   shr        r12, 1          // n/8 = 128
   xor        r15, r15        // i = 0
   xor        r10, r10        // j1 = 0
@@ -776,10 +776,10 @@ loop9b:
 //  Operation: d [reg_p4] <- a [reg_p1] * b [reg_p2] + c [reg_p3]
 //             reg_p5 contains parameter n
 //*********************************************************************** 
-.global pmuladd_asm
-pmuladd_asm:
-  vmovdqu    ymm5, PERM0246
-  vmovdqu    ymm6, MASK12x8 
+.global _pmuladd_asm
+_pmuladd_asm:
+  vmovdqu    ymm5, [_PERM0246+rip]
+  vmovdqu    ymm6, [_MASK12x8+rip]
   xor        rax, rax
   movq       r11, 4
 lazo2:
@@ -817,10 +817,10 @@ lazo2:
 //  Operation: c [reg_p3] <- a [reg_p1] * b [reg_p2]
 //             reg_p4 contains parameter n
 //*********************************************************************** 
-.global pmul_asm
-pmul_asm: 
-  vmovdqu    ymm5, PERM0246
-  vmovdqu    ymm6, MASK12x8 
+.global _pmul_asm
+_pmul_asm: 
+  vmovdqu    ymm5, [_PERM0246+rip]
+  vmovdqu    ymm6, [_MASK12x8+rip]
   xor        rax, rax
   movq       r11, 4
 lazo3:
@@ -856,10 +856,10 @@ lazo3:
 //  Operation: c [reg_p1] <- a [reg_p1]
 //             reg_p2 contains parameter n
 //*********************************************************************** 
-.global two_reduce12289_asm
-two_reduce12289_asm: 
-  vmovdqu    ymm6, MASK12x8 
-  vmovdqu    ymm7, PRIME8x
+.global _two_reduce12289_asm
+_two_reduce12289_asm: 
+  vmovdqu    ymm6, [_MASK12x8+rip]
+  vmovdqu    ymm7, [_PRIME8x+rip]
   xor        rax, rax
   movq       r11, 8
 lazo4:
@@ -900,10 +900,10 @@ lazo4:
 //  Encoding
 //  Operation: c [reg_p2] <- a [reg_p1]
 //*********************************************************************** 
-.global encode_asm
-encode_asm: 
-  vmovdqu    ymm6, MASK32 
-  vmovdqu    ymm7, MASK42
+.global _encode_asm
+_encode_asm: 
+  vmovdqu    ymm6, [_MASK32+rip]
+  vmovdqu    ymm7, [_MASK42+rip]
   mov        r9, 1024
   xor        rax, rax
   xor        r10, r10
@@ -939,12 +939,12 @@ lazo5:
 //  Decoding
 //  Operation: c [reg_p2] <- a [reg_p1]
 //*********************************************************************** 
-.global decode_asm
-decode_asm: 
-  vmovdqu    ymm6, MASK14_1 
-  vmovdqu    ymm7, MASK14_2
-  vmovdqu    ymm8, MASK14_3
-  vmovdqu    ymm9, MASK14_4
+.global _decode_asm
+_decode_asm: 
+  vmovdqu    ymm6, [_MASK14_1+rip]
+  vmovdqu    ymm7, [_MASK14_2+rip]
+  vmovdqu    ymm8, [_MASK14_3+rip]
+  vmovdqu    ymm9, [_MASK14_4+rip]
   mov        r9, 1024
   xor        rax, rax
   xor        r10, r10

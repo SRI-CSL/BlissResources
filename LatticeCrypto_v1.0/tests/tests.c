@@ -11,7 +11,8 @@
 #include "../LatticeCrypto_priv.h"
 #include "test_extras.h"
 #include <stdio.h>
-#include <malloc.h>
+//#include <malloc.h>
+#include <stdlib.h>
 
 extern const int32_t psi_rev_ntt1024_12289[PARAMETER_N];
 extern const int32_t omegainv_rev_ntt1024_12289[PARAMETER_N];
