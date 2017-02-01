@@ -109,15 +109,14 @@ static void multiply_by_c(int8_t *s, int n, uint16_t *c_indices,
 }
 
 /**
- * BLISS-B GreedySC algorithm 
+ * BLISS-B GreedySC algorithm
  *
  * iam: looks to be the algorithm 1 of bliss-b; though not sure why
  * we are doing two v's. c_indices = the indexes of the non zero
  * entries in c.
  *
  *  BD: this is the bliss-b with m = 2n. S split into (s1, s2)
- * 
- * iam: what allows us to assume the entries in s1 and s1 are so small?
+ *
  *
  */
 static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
@@ -125,7 +124,7 @@ static void greedy_sc(int8_t *s1, int8_t *s2, int n, uint16_t *c_indices,
 {
 	int i, j, index;
 	int32_t sign;
- 
+
 	for (i = 0; i < n; i++)
 	{
 		v1[i] = v2[i] = 0;
@@ -1347,4 +1346,3 @@ end:
 
 	return &this->public;
 }
-

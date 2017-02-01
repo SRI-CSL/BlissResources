@@ -130,6 +130,7 @@ bool Verify::verifyMessage(const struct pubkey& pk, const struct signature& s, c
 			az[i]-=modp; 
 		}
 	}
+	
 	generateC(indices, az, newHash);
 
 	delete[] az;
@@ -195,20 +196,20 @@ void Verify::generateC(long* indices, long* ay, char* newHash)
     
     for (i=0; i<kappa;) {
       index = (long) hash[j];
-      if (!arrayValues[index]){
+      if (!arrayValues[index]){  //why on earth is this no an SIGSEGV?
     	indices[i] = index;
     	arrayValues[index]++;
-	i++;
+		i++;
       }
       j++;
       if (j>=64) goto randomOracle;
     }
-
+	
 #else // 9 bits 
     unsigned long extra_bits;
     
     extra_bits = *((unsigned long *) (&hash[56]));
-
+	
     for (i=0; i<kappa;) {
       index = 2*((long) hash[j]) + (extra_bits %2);
       extra_bits = extra_bits >> 1;
@@ -220,7 +221,7 @@ void Verify::generateC(long* indices, long* ay, char* newHash)
       j++;
       if (j>=56) goto randomOracle;     
     }
-    	
-    #endif
+    
+#endif
 
 }
