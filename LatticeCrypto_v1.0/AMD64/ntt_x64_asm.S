@@ -17,6 +17,14 @@
 #define reg_p4  rcx
 #define reg_p5  r8
 
+// BD: attempt to get the code working on both MacOSX and Linux
+// On MacOS we need to prefix all global symbols with an underscore
+#if defined(__APPLE__)
+#define _G(s) _##s
+#else
+#define _G(s) s
+#endif
+
 
 .text
 //***********************************************************************
@@ -25,8 +33,8 @@
 //             [reg_p2] points to table and 
 //             reg_p3 contains parameter n
 //*********************************************************************** 
-.global _NTT_CT_std2rev_12289_asm
-_NTT_CT_std2rev_12289_asm:
+.global _G(NTT_CT_std2rev_12289_asm)
+_G(NTT_CT_std2rev_12289_asm):
   push       r12
   push       r13
   push       r14
@@ -36,8 +44,8 @@ _NTT_CT_std2rev_12289_asm:
   mov        rax, reg_p3 
   mov        r12, reg_p3      
   shr        r12, 4           // n/16
-  vmovdqu    ymm14, [_MASK12x8+rip]
-  vmovdqu    ymm12, [_PERM0246+rip]
+  vmovdqu    ymm14, [_G(MASK12x8)+rip]
+  vmovdqu    ymm12, [_G(PERM0246)+rip]
   mov        r14, 16
   mov        rcx, 11
 loop1:
@@ -221,7 +229,7 @@ loop6:
   jl         loop6
 
 // Stage m=256 
-  vmovdqu    ymm9, [_PERM02134657+rip]
+  vmovdqu    ymm9, [_G(PERM02134657)+rip]
   shl        r9, 1
   xor        rdx, rdx         // i = 0
   xor        r10, r10         // j1 = 0
@@ -315,7 +323,7 @@ loop7:
   jl         loop7
 
 // Stage m=512
-  vmovdqu    ymm9, [_PERM00224466+rip]
+  vmovdqu    ymm9, [_G(PERM00224466)+rip]
   shl        r9, 1            // m = n/2 
   xor        rdx, rdx         // i = 0
   xor        r10, r10         // j1 = 0
@@ -355,8 +363,8 @@ loop8:
 //             reg_p3 and reg_p4 point to constants for scaling and
 //             reg_p5 contains parameter n
 //*********************************************************************** 
-.global _INTT_GS_rev2std_12289_asm
-_INTT_GS_rev2std_12289_asm:
+.global _G(INTT_GS_rev2std_12289_asm)
+_G(INTT_GS_rev2std_12289_asm):
   push       r12
   push       r13
   push       r14
@@ -364,8 +372,8 @@ _INTT_GS_rev2std_12289_asm:
   push       rbx
 
 // Stage m=1024
-  vmovdqu    ymm9, [_PERM00224466+rip]
-  vmovdqu    ymm14, [_MASK12x8+rip]
+  vmovdqu    ymm9, [_G(PERM00224466)+rip]
+  vmovdqu    ymm14, [_G(MASK12x8)+rip]
   mov        r12, reg_p5           
   shr        r12, 1          // n/2 = 512
   xor        r15, r15        // i = 0
@@ -395,9 +403,9 @@ loop1b:
   jl         loop1b
   
 // Stage m=512 
-  vmovdqu    ymm9, [_PERM02134657+rip]
-  vmovdqu    ymm13, [_PERM0145+rip]
-  vmovdqu    ymm15, [_PERM2367+rip]
+  vmovdqu    ymm9, [_G(PERM02134657)+rip]
+  vmovdqu    ymm13, [_G(PERM0145)+rip]
+  vmovdqu    ymm15, [_G(PERM2367)+rip]
   shr        r12, 1          // n/4 = 256
   xor        r15, r15        // i = 0
   xor        r10, r10        // j1 = 0
@@ -483,7 +491,7 @@ loop2b:
   jl         loop2b
      
 // Stage m=256 
-  vmovdqu    ymm12, [_PERM0246+rip]
+  vmovdqu    ymm12, [_G(PERM0246)+rip]
   shr        r12, 1          // n/8 = 128
   xor        r15, r15        // i = 0
   xor        r10, r10        // j1 = 0
@@ -776,12 +784,12 @@ loop9b:
 //  Operation: d [reg_p4] <- a [reg_p1] * b [reg_p2] + c [reg_p3]
 //             reg_p5 contains parameter n
 //*********************************************************************** 
-.global _pmuladd_asm
-_pmuladd_asm:
-  vmovdqu    ymm5, [_PERM0246+rip]
-  vmovdqu    ymm6, [_MASK12x8+rip]
+.global _G(pmuladd_asm)
+_G(pmuladd_asm):
+  vmovdqu    ymm5, [_G(PERM0246)+rip]
+  vmovdqu    ymm6, [_G(MASK12x8)+rip]
   xor        rax, rax
-  movq       r11, 4
+  mov        r11, 4
 lazo2:
   vpmovsxdq  ymm0, XMMWORD PTR [reg_p1+4*rax]   // a
   vpmovsxdq  ymm1, XMMWORD PTR [reg_p2+4*rax]   // b
@@ -817,12 +825,12 @@ lazo2:
 //  Operation: c [reg_p3] <- a [reg_p1] * b [reg_p2]
 //             reg_p4 contains parameter n
 //*********************************************************************** 
-.global _pmul_asm
-_pmul_asm: 
-  vmovdqu    ymm5, [_PERM0246+rip]
-  vmovdqu    ymm6, [_MASK12x8+rip]
+.global _G(pmul_asm)
+_G(pmul_asm):
+  vmovdqu    ymm5, [_G(PERM0246)+rip]
+  vmovdqu    ymm6, [_G(MASK12x8)+rip]
   xor        rax, rax
-  movq       r11, 4
+  mov        r11, 4
 lazo3:
   vpmovsxdq  ymm0, XMMWORD PTR [reg_p1+4*rax]   // a
   vpmovsxdq  ymm1, XMMWORD PTR [reg_p2+4*rax]   // b
@@ -856,12 +864,12 @@ lazo3:
 //  Operation: c [reg_p1] <- a [reg_p1]
 //             reg_p2 contains parameter n
 //*********************************************************************** 
-.global _two_reduce12289_asm
-_two_reduce12289_asm: 
-  vmovdqu    ymm6, [_MASK12x8+rip]
-  vmovdqu    ymm7, [_PRIME8x+rip]
+.global _G(two_reduce12289_asm)
+_G(two_reduce12289_asm): 
+  vmovdqu    ymm6, [_G(MASK12x8)+rip]
+  vmovdqu    ymm7, [_G(PRIME8x)+rip]
   xor        rax, rax
-  movq       r11, 8
+  mov        r11, 8
 lazo4:
   vmovdqu    ymm0, YMMWORD PTR [reg_p1+4*rax]   // a
 
@@ -900,10 +908,10 @@ lazo4:
 //  Encoding
 //  Operation: c [reg_p2] <- a [reg_p1]
 //*********************************************************************** 
-.global _encode_asm
-_encode_asm: 
-  vmovdqu    ymm6, [_MASK32+rip]
-  vmovdqu    ymm7, [_MASK42+rip]
+.global _G(encode_asm)
+_G(encode_asm): 
+  vmovdqu    ymm6, [_G(MASK32)+rip]
+  vmovdqu    ymm7, [_G(MASK42)+rip]
   mov        r9, 1024
   xor        rax, rax
   xor        r10, r10
@@ -939,12 +947,12 @@ lazo5:
 //  Decoding
 //  Operation: c [reg_p2] <- a [reg_p1]
 //*********************************************************************** 
-.global _decode_asm
-_decode_asm: 
-  vmovdqu    ymm6, [_MASK14_1+rip]
-  vmovdqu    ymm7, [_MASK14_2+rip]
-  vmovdqu    ymm8, [_MASK14_3+rip]
-  vmovdqu    ymm9, [_MASK14_4+rip]
+.global _G(decode_asm)
+_G(decode_asm): 
+  vmovdqu    ymm6, [_G(MASK14_1)+rip]
+  vmovdqu    ymm7, [_G(MASK14_2)+rip]
+  vmovdqu    ymm8, [_G(MASK14_3)+rip]
+  vmovdqu    ymm9, [_G(MASK14_4)+rip]
   mov        r9, 1024
   xor        rax, rax
   xor        r10, r10

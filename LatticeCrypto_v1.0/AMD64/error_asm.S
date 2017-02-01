@@ -18,25 +18,32 @@
 #define reg_p4  rcx
 #define reg_p5  r8
 
+// BD: attempt to get the code working on both MacOSX and Linux
+// On MacOS we need to prefix all global symbols with an underscore
+#if defined(__APPLE__)
+#define _G(s) _##s
+#else
+#define _G(s) s
+#endif
 
 .text
 //***********************************************************************
 //  Error sampling from psi_12
 //  Operation: c [reg_p2] <- sampling(a) [reg_p1]
 //*********************************************************************** 
-.global _error_sampling_asm
-_error_sampling_asm:  
-  vmovdqu    ymm7, [_ONE32x+rip]
-  movq       r11, 384
-  movq       r10, 32
-  movq       r8, 24
+.global _G(error_sampling_asm)
+_G(error_sampling_asm):
+  vmovdqu    ymm7, [_G(ONE32x)+rip]
+  mov        r11, 384
+  mov        r10, 32
+  mov        r8, 24
   xor        rax, rax
   xor        rcx, rcx
 loop1:
   vmovdqu    ymm0, YMMWORD PTR [reg_p1+4*rax]        // sample
   vmovdqu    ymm2, YMMWORD PTR [reg_p1+4*rax+32]     // sample
   vmovdqu    ymm4, YMMWORD PTR [reg_p1+4*rax+64]     // sample
-  movq       r9, 2
+  mov        r9, 2
 
 loop1b:
   vpand      ymm1, ymm0, ymm7                        // Collecting 8 bits for first sample
@@ -141,11 +148,11 @@ loop1b:
 //  Operation: c [reg_p2] <- function(a) [reg_p1]
 //             [reg_p3] points to random bits
 //*********************************************************************** 
-.global _helprec_asm
-_helprec_asm:  
-  vmovdqu    ymm8, [_ONE8x+rip]
-  movq       r11, 256
-  movq       r10, 8
+.global _G(helprec_asm)
+_G(helprec_asm):  
+  vmovdqu    ymm8, [_G(ONE8x)+rip]
+  mov        r11, 256
+  mov        r10, 8
   xor        rax, rax
   vmovdqu    ymm4, YMMWORD PTR [reg_p3]              // rbits
 loop2:
@@ -164,8 +171,8 @@ loop2:
   vpsubd     ymm2, ymm2, ymm5
   vpsubd     ymm3, ymm3, ymm5
     
-  vmovdqu    ymm15, [_PARAM_Q4x8+rip]
-  vmovdqu    ymm7, [_FOUR8x+rip]
+  vmovdqu    ymm15, [_G(PARAM_Q4x8)+rip]
+  vmovdqu    ymm7, [_G(FOUR8x)+rip]
   vmovdqu    ymm8, ymm7
   vmovdqu    ymm9, ymm7
   vmovdqu    ymm10, ymm7
@@ -181,7 +188,7 @@ loop2:
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm10, ymm10, ymm6
-  vmovdqu    ymm15, [_PARAM_3Q4x8+rip]
+  vmovdqu    ymm15, [_G(PARAM_3Q4x8)+rip]
   vpsubd     ymm6, ymm0, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm7, ymm7, ymm6
@@ -194,7 +201,7 @@ loop2:
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm10, ymm10, ymm6
-  vmovdqu    ymm15, [_PARAM_5Q4x8+rip]
+  vmovdqu    ymm15, [_G(PARAM_5Q4x8)+rip]
   vpsubd     ymm6, ymm0, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm7, ymm7, ymm6
@@ -207,7 +214,7 @@ loop2:
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm10, ymm10, ymm6
-  vmovdqu    ymm15, [_PARAM_7Q4x8+rip]
+  vmovdqu    ymm15, [_G(PARAM_7Q4x8)+rip]
   vpsubd     ymm6, ymm0, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm7, ymm7, ymm6                        // v0[0]
@@ -219,10 +226,10 @@ loop2:
   vpsubd     ymm9, ymm9, ymm6                        // v0[2]
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
-  vpsubd     ymm10, ymm10, ymm6                      // v0[_3]  
+  vpsubd     ymm10, ymm10, ymm6                      // v0[3]  
     
-  vmovdqu    ymm15, [_PARAM_Q2x8+rip]
-  vmovdqu    ymm11, [_THREE8x+rip]
+  vmovdqu    ymm15, [_G(PARAM_Q2x8)+rip]
+  vmovdqu    ymm11, [_G(THREE8x)+rip]
   vmovdqu    ymm12, ymm11
   vmovdqu    ymm13, ymm11
   vmovdqu    ymm14, ymm11
@@ -238,7 +245,7 @@ loop2:
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm14, ymm14, ymm6
-  vmovdqu    ymm15, [_PARAM_3Q2x8+rip]
+  vmovdqu    ymm15, [_G(PARAM_3Q2x8)+rip]
   vpsubd     ymm6, ymm0, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm11, ymm11, ymm6
@@ -251,7 +258,7 @@ loop2:
   vpsubd     ymm6, ymm3, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm14, ymm14, ymm6
-  vmovdqu    ymm15, [_PRIME8x+rip]
+  vmovdqu    ymm15, [_G(PRIME8x)+rip]
   vpsubd     ymm6, ymm0, ymm15
   vpsrld     ymm6, ymm6, 31 
   vpsubd     ymm11, ymm11, ymm6                      // v1[0]
@@ -300,8 +307,8 @@ loop2:
   vpand      ymm10, ymm10, ymm0
   vpxor      ymm10, ymm10, ymm14
   
-  vmovdqu    ymm15, [_THREE8x+rip]
-  vmovdqu    ymm14, [_ONE8x+rip]
+  vmovdqu    ymm15, [_G(THREE8x)+rip]
+  vmovdqu    ymm14, [_G(ONE8x)+rip]
   vpsubd     ymm7, ymm7, ymm10
   vpand      ymm7, ymm7, ymm15
   vpsubd     ymm8, ymm8, ymm10
@@ -331,17 +338,17 @@ loop2:
 //  Reconciliation function
 //  Operation: c [reg_p3] <- function(a [reg_p1], b [reg_p2])
 //*********************************************************************** 
-.global _rec_asm
-_rec_asm:  
+.global _G(rec_asm)
+_G(rec_asm):  
   vpxor      ymm12, ymm12, ymm12 
-  vmovdqu    ymm15, [_PRIME8x+rip]
+  vmovdqu    ymm15, [_G(PRIME8x)+rip]
   vpslld     ymm14, ymm15, 2                         // 4*Q  
   vpslld     ymm13, ymm15, 3                         // 8*Q
   vpsubd     ymm12, ymm12, ymm13                     // -8*Q
   vpxor      ymm11, ymm12, ymm13                     // 8*Q ^ -8*Q
-  vmovdqu    ymm10, [_ONE8x +rip]
-  movq       r11, 256
-  movq       r10, 8
+  vmovdqu    ymm10, [_G(ONE8x) +rip]
+  mov        r11, 256
+  mov        r10, 8
   xor        rax, rax
   xor        rcx, rcx
 loop3:
