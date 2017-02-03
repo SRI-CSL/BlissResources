@@ -197,6 +197,7 @@ void Verify::generateC(long* indices, long* ay, char* newHash)
     for (i=0; i<kappa;) {
       index = (long) hash[j];
       if (!arrayValues[index]){  //why on earth is this no an SIGSEGV?
+      	// TL: Probably because 0<= hash[j]<256 and length(arrayValues) = 256 here and 512 below
     	indices[i] = index;
     	arrayValues[index]++;
 		i++;
